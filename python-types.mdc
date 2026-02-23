@@ -6,10 +6,13 @@ alwaysApply: false
 
 # Python type hints
 
+Type hints are a **design tool** for humans and tools (mypy, IDEs); use them to make data shape and contracts explicit.
+
 - **No `Any`** – use a specific type or `Unknown` from `typing`; prefer redesign over `Any`.
 - **No `type: ignore`** without a short justification comment.
 - **Annotate all function signatures** – parameters and return types. Same for test code.
 - **mypy** in strict mode (e.g. `disallow_untyped_defs`, `disallow_any_generics`, `strict_optional`).
+- **Built-in generics** (Python 3.9+): use `list[int]`, `dict[str, T]`, `tuple[int, str]` instead of `typing.List`, `typing.Dict`, `typing.Tuple`. Use `X | Y` for unions (3.10+) instead of `Union[X, Y]` where possible.
 
 ## Pydantic for data structures
 
@@ -26,7 +29,12 @@ class PaymentRequest(BaseModel):
     # ...
 ```
 
-Use schemas at boundaries: `def parse_payment_request(data: dict) -> PaymentRequest: return PaymentRequest(**data)`.
+Use schemas at boundaries:
+
+```python
+def parse_payment_request(data: dict[str, object]) -> PaymentRequest:
+    return PaymentRequest(**data)
+```
 
 ## In tests
 
