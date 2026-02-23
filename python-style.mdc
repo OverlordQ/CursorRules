@@ -1,0 +1,39 @@
+---
+description: Functional-light style, immutability, naming, no inline comments, options objects
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python code style
+
+- **Immutable data** – no mutation; return new structures (e.g. `replace()`, `tuple`, `[*items, new_item]`).
+- **Pure, small functions** – composition over big blocks; early returns, max ~2 levels of nesting.
+- **Naming**: functions `snake_case` (verb-based), classes `PascalCase`, constants `UPPER_SNAKE_CASE`, files `snake_case.py`, private `_prefix`.
+- **No inline comments** – code and names should be self-explanatory. Docstrings for public APIs and non-obvious behavior only.
+
+## Options over many positional args
+
+Prefer a single options object (dataclass or TypedDict) over long positional parameter lists or boolean flags.
+
+```python
+@dataclass
+class CreatePaymentOptions:
+    amount: float
+    currency: str
+    card_id: str
+    customer_id: str
+    description: Optional[str] = None
+
+def create_payment(options: CreatePaymentOptions) -> dict:
+    ...
+```
+
+Call site: `create_payment(CreatePaymentOptions(amount=100, currency="GBP", ...))`.
+
+## Error handling
+
+Use typed exceptions and early returns. Optionally a Result type: `Union[dict, PaymentError]`.
+
+## Avoid
+
+- Mutating arguments; nested if/else; large functions; comments that restate what the code does.
