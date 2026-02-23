@@ -36,7 +36,11 @@ def test_calculate_total_includes_shipping() -> None:
 # 2. Green – minimal implementation
 def process_order(order: Order) -> ProcessedOrder:
     items_total = sum(item.price * item.quantity for item in order.items)
-    return ProcessedOrder(items=order.items, shipping_cost=order.shipping_cost, total=items_total + order.shipping_cost)
+    return ProcessedOrder(
+        items=order.items,
+        shipping_cost=order.shipping_cost,
+        total=items_total + order.shipping_cost,
+    )
 ```
 
 Then add the next failing test (e.g. free shipping over £50), make it pass, then refactor if useful.
