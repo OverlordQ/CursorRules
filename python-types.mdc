@@ -13,12 +13,13 @@ alwaysApply: false
 
 ## Pydantic for data structures
 
-Use Pydantic models for request/response and domain data: runtime validation and type safety.
+Use Pydantic models for request/response and domain data: runtime validation and type safety. For immutable domain/request/response models, set `model_config = ConfigDict(frozen=True)` (Pydantic v2) so instances cannot be mutated.
 
 ```python
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 class PaymentRequest(BaseModel):
+    model_config = ConfigDict(frozen=True)
     card_account_id: str = Field(min_length=16, max_length=16)
     amount: float = Field(gt=0, le=10000)
     source: Literal["Web", "Mobile", "API"]
