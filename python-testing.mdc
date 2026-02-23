@@ -1,0 +1,51 @@
+---
+description: Behavior-driven testing, test via public API, factory pattern, real schemas only
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python testing
+
+- **Behavior, not implementation**: Test through the public API; internals are invisible. No 1:1 test file to implementation file.
+- **No "unit tests"** – tests verify expected behavior; treat implementation as a black box.
+- **100% coverage** is expected; coverage must come from business behavior tests, not implementation probing.
+- **Tools**: pytest, pytest-mock, Pydantic. Test code follows the same type-hint rules as production.
+
+## Test data: factory with overrides
+
+Use factory functions that return complete objects and accept optional overrides. Compose factories for nested types. Validate against **real** schemas.
+
+```python
+def get_mock_payment_request(overrides: Optional[dict] = None) -> PaymentRequest:
+    base = {
+        "card_account_id": "1234567890123456",
+        "amount": 100,
+        "source": "Web",
+        "account_status": "Normal",
+        "last_name": "Doe",
+        "date_of_birth": "1980-01-01",
+        "paying_card_details": get_mock_paying_card_details(),
+        "address_details": get_mock_address_details(),
+        "brand": "Visa",
+    }
+    if overrides:
+        base.update(overrides)
+    return PaymentRequest(**base)
+```
+
+## Use real schemas in tests
+
+- Import schemas from the project (e.g. `from your_org.schemas import Project`). Do **not** redefine schemas in test files.
+- Factories must use real types; this keeps tests in sync with production and catches type mismatches.
+
+## Example: testing behavior
+
+```python
+def test_payment_declined_when_insufficient_funds() -> None:
+    payment = get_mock_payment_request({"amount": 1000})
+    account = {"balance": 500}
+    with pytest.raises(InsufficientFundsError):
+        process_payment(payment, account)
+```
+
+Avoid tests that assert on internal calls or private methods.
