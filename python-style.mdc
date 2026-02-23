@@ -6,8 +6,8 @@ alwaysApply: false
 
 # Python code style
 
-- **Immutable data** – no mutation; return new structures (e.g. `replace()`, `tuple`, `[*items, new_item]`).
-- **Pure, small functions** – composition over big blocks; early returns, max ~2 levels of nesting.
+- **Prefer immutable data** – return new structures (e.g. `replace()`, `tuple`, `{**d, **overrides}`). **Exception**: when building collections in a loop or needing O(1) append/queue behavior, use in-place mutation (e.g. `list.append`, `collections.deque`, a scoped cache) instead of copying each time.
+- **Pure, small functions** – composition over big blocks; early returns, max ~2 levels of nesting. I/O and state changes are fine at boundaries (e.g. load/save separate from compute); prefer pure logic where possible.
 - **Naming**: functions `snake_case` (verb-based), classes `PascalCase`, constants `UPPER_SNAKE_CASE`, files `snake_case.py`, private `_prefix`.
 - **No inline comments** – code and names should be self-explanatory. Docstrings for public APIs and non-obvious behavior only.
 
@@ -32,8 +32,8 @@ Call site: `create_payment(CreatePaymentOptions(amount=100, currency="GBP", ...)
 
 ## Error handling
 
-Use typed exceptions and early returns. Optionally a Result type: `Union[dict, PaymentError]`.
+Use typed exceptions and early returns. Optionally a Result type (e.g. `Union[Success, Error]` or return `Union[dict, PaymentError]` with callers checking `isinstance(result, PaymentError)`); otherwise raise typed exceptions.
 
 ## Avoid
 
-- Mutating arguments; nested if/else; large functions; comments that restate what the code does.
+- Mutating arguments (except when performance/scoped build requires it); default mutable arguments (e.g. `def f(x=[])`); nested if/else; large functions; comments that restate what the code does.
