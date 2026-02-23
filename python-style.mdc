@@ -11,6 +11,17 @@ alwaysApply: false
 - **Naming**: functions `snake_case` (verb-based), classes `PascalCase`, constants `UPPER_SNAKE_CASE`, files `snake_case.py`, private `_prefix`.
 - **No inline comments** – code and names should be self-explanatory. Docstrings for public APIs and non-obvious behavior only.
 
+## Formatting (Black)
+
+Use **Black** (default line length 88). Stay within that limit; PEP 8 suggests 79 for docstrings/comments if stricter.
+
+- **Indentation**: 4 spaces per level; no tabs (PEP 8).
+- **Imports**: Stdlib, then third-party, then local; one blank line between groups (PEP 8 / isort).
+- **Blank lines**: Two between top-level functions and classes; one between methods (PEP 8).
+- **Strings**: Prefer double quotes `"` (Black default).
+- **Trailing commas**: Use in multi-line literals and function signatures so Black keeps one item per line and diffs stay small.
+- **Readability**: Prefer readability and project consistency; PEP 8 allows intentional deviation when it helps.
+
 ## Options over many positional args
 
 Prefer a single options object (dataclass or TypedDict) over long positional parameter lists or boolean flags.
@@ -22,9 +33,10 @@ class CreatePaymentOptions:
     currency: str
     card_id: str
     customer_id: str
-    description: Optional[str] = None
+    description: str | None = None
 
-def create_payment(options: CreatePaymentOptions) -> dict:
+
+def create_payment(options: CreatePaymentOptions) -> dict[str, object]:
     ...
 ```
 
@@ -32,7 +44,7 @@ Call site: `create_payment(CreatePaymentOptions(amount=100, currency="GBP", ...)
 
 ## Error handling
 
-Use typed exceptions and early returns. Optionally a Result type (e.g. `Union[Success, Error]` or return `Union[dict, PaymentError]` with callers checking `isinstance(result, PaymentError)`); otherwise raise typed exceptions.
+Use typed exceptions and early returns. Optionally a Result type (e.g. `Success | Error` or return `dict[str, object] | PaymentError` with callers checking `isinstance(result, PaymentError)`); otherwise raise typed exceptions.
 
 ## Avoid
 
