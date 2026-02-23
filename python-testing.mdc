@@ -16,7 +16,7 @@ alwaysApply: false
 Use factory functions that return complete objects and accept optional overrides. Compose factories for nested types. Validate against **real** schemas.
 
 ```python
-def get_mock_payment_request(overrides: Optional[dict] = None) -> PaymentRequest:
+def get_mock_payment_request(overrides: dict[str, object] | None = None) -> PaymentRequest:
     base = {
         "card_account_id": "1234567890123456",
         "amount": 100,
