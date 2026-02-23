@@ -1,0 +1,42 @@
+---
+description: TDD is mandatory – red-green-refactor, no production code without a failing test
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# TDD – Non-negotiable
+
+Every line of production code must be written in response to a **failing test**. No exceptions.
+
+## Red-Green-Refactor
+
+1. **Red**: Write a failing test for the desired behavior. No production code until the test exists and fails.
+2. **Green**: Write the minimum code to make the test pass.
+3. **Refactor**: After green, assess if refactoring adds value; if so, clean up while keeping tests green.
+
+## Violations to avoid
+
+- Writing production code without a failing test first
+- Writing multiple tests before making the first one pass
+- Writing more code than needed to pass the current test
+- Skipping the refactor step when code could be improved
+- Adding functionality "while you're there" without a test driving it
+
+**If you're typing production code and there isn't a failing test demanding it, stop and write the test first.**
+
+## Minimal example
+
+```python
+# 1. Red – failing test
+def test_calculate_total_includes_shipping() -> None:
+    order = Order(items=[OrderItem(price=30.0, quantity=1)], shipping_cost=5.99)
+    processed = process_order(order)
+    assert processed.total == 35.99
+
+# 2. Green – minimal implementation
+def process_order(order: Order) -> ProcessedOrder:
+    items_total = sum(item.price * item.quantity for item in order.items)
+    return ProcessedOrder(items=order.items, shipping_cost=order.shipping_cost, total=items_total + order.shipping_cost)
+```
+
+Then add the next failing test (e.g. free shipping over £50), make it pass, then refactor if useful.
