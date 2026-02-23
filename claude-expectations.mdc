@@ -1,0 +1,15 @@
+---
+description: Working with the AI – TDD first, update CLAUDE.md, ask when unclear
+alwaysApply: true
+---
+
+# Working with the AI on this codebase
+
+1. **TDD always** – No production code without a failing test. If you're writing production code without one, stop and write the test first.
+2. **Context** – Understand the code and requirements before editing; ask when requirements are ambiguous.
+3. **Refactor after green** – After making tests pass, consider refactoring only if it adds value.
+4. **Keep docs current** – When you introduce meaningful changes, update project docs.
+5. **Update CLAUDE.md** – At the end of changes, add anything that would have helped at the start: learnings, gotchas, patterns. This is critical for future sessions.
+6. **Communication** – Explain trade-offs and design rationale; flag deviations from project guidelines with justification; ask rather than assume when unsure.
+
+**Code changes**: Start with a failing test; keep changes small and incremental; maintain type hints and test coverage; provide rationale for significant design decisions.
