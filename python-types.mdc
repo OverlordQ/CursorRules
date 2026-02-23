@@ -1,0 +1,32 @@
+---
+description: mypy strict, no Any, Pydantic for data, type hints on all functions
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Python type hints
+
+- **No `Any`** – use a specific type or `Unknown` from `typing`; prefer redesign over `Any`.
+- **No `type: ignore`** without a short justification comment.
+- **Annotate all function signatures** – parameters and return types. Same for test code.
+- **mypy** in strict mode (e.g. `disallow_untyped_defs`, `disallow_any_generics`, `strict_optional`).
+
+## Pydantic for data structures
+
+Use Pydantic models for request/response and domain data: runtime validation and type safety.
+
+```python
+from pydantic import BaseModel, Field
+
+class PaymentRequest(BaseModel):
+    card_account_id: str = Field(min_length=16, max_length=16)
+    amount: float = Field(gt=0, le=10000)
+    source: Literal["Web", "Mobile", "API"]
+    # ...
+```
+
+Use schemas at boundaries: `def parse_payment_request(data: dict) -> PaymentRequest: return PaymentRequest(**data)`.
+
+## In tests
+
+Tests must use the **same** schemas and types as production (import from shared modules). Never redefine schemas in test files. Factories return real typed models (e.g. `PaymentRequest`, not a duplicate `TestPaymentRequest`).
