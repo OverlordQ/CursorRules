@@ -8,7 +8,7 @@ alwaysApply: false
 
 - **Behavior, not implementation**: Test through the public API; internals are invisible. No 1:1 test file to implementation file.
 - **No "unit tests"** – tests verify expected behavior; treat implementation as a black box.
-- **100% coverage** is expected; coverage must come from business behavior tests, not implementation probing.
+- **100% coverage** is the target; coverage must come from business behavior tests, not implementation probing. Prioritize behavior; avoid adding tests solely to hit uncovered lines. Trivial or unreachable code may stay uncovered if behavior is fully tested.
 - **Tools**: pytest, pytest-mock, Pydantic. Test code follows the same type-hint rules as production.
 
 ## Test data: factory with overrides
@@ -28,9 +28,8 @@ def get_mock_payment_request(overrides: Optional[dict] = None) -> PaymentRequest
         "address_details": get_mock_address_details(),
         "brand": "Visa",
     }
-    if overrides:
-        base.update(overrides)
-    return PaymentRequest(**base)
+    merged = {**base, **(overrides or {})}
+    return PaymentRequest(**merged)
 ```
 
 ## Use real schemas in tests
