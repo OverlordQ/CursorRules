@@ -1,0 +1,24 @@
+---
+description: Refactor after green, commit before/after, DRY = knowledge not code, semantic abstraction
+globs: "**/*.py"
+alwaysApply: false
+---
+
+# Refactoring (third step of TDD)
+
+After tests are green, **assess** whether refactoring adds value. Only refactor when it improves the code.
+
+## Rules
+
+1. **Commit before refactoring** – safe rollback point.
+2. **Refactor by meaning, not shape** – abstract when code shares the same **semantic** concept. Duplicate code is cheaper than the wrong abstraction.
+3. **DRY = knowledge** – avoid duplicating business rules and constants (e.g. `FREE_SHIPPING_THRESHOLD` in one place). Similar-looking but different rules (e.g. age vs rating validation) need not be unified.
+4. **Keep public API unchanged** – refactor internals only; extract private helpers (`_validate_amount`) as needed.
+5. **After refactoring**: all tests pass, mypy/lint pass, commit refactor separately from feature commits.
+
+## Checklist before committing refactor
+
+- Refactoring actually improves the code
+- All tests pass unchanged
+- No new public APIs (only `_` helpers)
+- No speculative abstractions
